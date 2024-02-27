@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
@@ -28,8 +29,6 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
-
-
 
 class GeneratorPage extends StatelessWidget {
   const GeneratorPage({super.key});
@@ -200,59 +199,80 @@ class Gender extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-          Stack(alignment: AlignmentDirectional.center, children: [
-            Image(
-              image: AssetImage(manImg),
-              height: MediaQuery.of(context).size.height - 100,
-              width: MediaQuery.of(context).size.width / 2 - 20,
-              fit: BoxFit.cover,
-            ),
-            ElevatedButton(
-              onPressed: () => {},
-              style: ElevatedButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(0.0)),
-                padding: const EdgeInsets.only(
-                    top: 25, bottom: 25, left: 35, right: 35),
-                backgroundColor: btnColor,
-                foregroundColor: btnTextColor,
-                textStyle: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+
+        int direction = 0;
+        if (constraints.maxWidth > 1440) {
+          direction = 1;
+        } else if (constraints.maxWidth > 1024) {
+          direction = 1;
+        } else if (constraints.maxWidth > 768) {
+          direction = 1;
+        } else {
+          direction = 0;
+        }
+
+        return Column(
+          children: [
+            Flex(
+              direction: direction == 1
+                  ? Axis.horizontal
+                  : Axis.vertical,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+              Stack(alignment: AlignmentDirectional.center, children: [
+                Image(
+                  image: AssetImage(manImg),
+                  height: MediaQuery.of(context).size.height - 100,
+                  width: MediaQuery.of(context).size.width / 2 - 20,
+                  fit: BoxFit.cover,
                 ),
-              ),
-              child: const Text("SHOP MEN"),
-            ),
-          ]),
-          Stack(alignment: AlignmentDirectional.center, children: [
-            Image(
-              image: AssetImage(womanImg),
-              height: MediaQuery.of(context).size.height - 100,
-              width: MediaQuery.of(context).size.width / 2 - 20,
-              fit: BoxFit.cover,
-            ),
-            ElevatedButton(
-              onPressed: () => {},
-              style: ElevatedButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(0.0)),
-                padding: const EdgeInsets.only(
-                    top: 25, bottom: 25, left: 35, right: 35),
-                backgroundColor: btnColor,
-                foregroundColor: btnTextColor,
-                textStyle: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
+                ElevatedButton(
+                  onPressed: () => {},
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(0.0)),
+                    padding: const EdgeInsets.only(
+                        top: 25, bottom: 25, left: 35, right: 35),
+                    backgroundColor: btnColor,
+                    foregroundColor: btnTextColor,
+                    textStyle: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  child: const Text("SHOP MEN"),
                 ),
-              ),
-              child: const Text("SHOP WOMEN"),
-            ),
-          ]),
-        ]),
-      ],
+              ]),
+              Stack(alignment: AlignmentDirectional.center, children: [
+                Image(
+                  image: AssetImage(womanImg),
+                  height: MediaQuery.of(context).size.height - 100,
+                  width: MediaQuery.of(context).size.width / 2 - 20,
+                  fit: BoxFit.cover,
+                ),
+                ElevatedButton(
+                  onPressed: () => {},
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(0.0)),
+                    padding: const EdgeInsets.only(
+                        top: 25, bottom: 25, left: 35, right: 35),
+                    backgroundColor: btnColor,
+                    foregroundColor: btnTextColor,
+                    textStyle: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  child: const Text("SHOP WOMEN"),
+                ),
+              ]),
+            ]),
+          ],
+        );
+      },
     );
   }
 }
@@ -265,74 +285,87 @@ class NewArrivals extends StatelessWidget {
     var appState = context.watch<MyAppState>();
     var products = appState.products;
 
-    return Container(
-      height: 400 + 200,
-      child: Column(
-        children: [
-          const Text(
-            "NEW ARRIVALS",
-            style: TextStyle(
-              fontSize: 40,
-              fontWeight: FontWeight.w700,
+    return LayoutBuilder(builder: (context, constraints) {
+      int numberProds = 1;
+      if (constraints.maxWidth > 1440) {
+        numberProds = 5;
+      } else if (constraints.maxWidth > 1024) {
+        numberProds = 4;
+      } else if (constraints.maxWidth > 768) {
+        numberProds = 3;
+      } else {
+        numberProds = 1;
+      }
+
+      return SizedBox(
+        height: 400 + 200,
+        child: Column(
+          children: [
+            const Text(
+              "NEW ARRIVALS",
+              style: TextStyle(
+                fontSize: 40,
+                fontWeight: FontWeight.w700,
+              ),
             ),
-          ),
-          const SizedBox(height: 30),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              for (var i = 0; i < min(5, products.length); i++)
-                Column(
-                  children: [
-                    Stack(
-                        alignment: AlignmentDirectional.bottomCenter,
-                        children: [
-                          Image.file(
-                            products[i].img,
-                            width: 250,
-                            height: 400,
-                            fit: BoxFit.cover,
-                          ),
-                          if (products[i].status.isNotEmpty)
-                            Container(
-                              decoration: const BoxDecoration(
-                                color: Color.fromRGBO(17, 17, 17, 1),
-                              ),
+            const SizedBox(height: 30),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                for (var i = 0; i < min(numberProds, products.length); i++)
+                  Column(
+                    children: [
+                      Stack(
+                          alignment: AlignmentDirectional.bottomCenter,
+                          children: [
+                            Image.file(
+                              products[i].img,
                               width: 250,
-                              child: Text(
-                                products[i].status.toUpperCase(),
-                                textAlign: TextAlign.center,
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w700,
+                              height: 400,
+                              fit: BoxFit.cover,
+                            ),
+                            if (products[i].status.isNotEmpty)
+                              Container(
+                                decoration: const BoxDecoration(
+                                  color: Color.fromRGBO(17, 17, 17, 1),
+                                ),
+                                width: 250,
+                                child: Text(
+                                  products[i].status.toUpperCase(),
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w700,
+                                  ),
                                 ),
                               ),
-                            ),
-                        ]),
-                    const SizedBox(height: 10),
-                    Text(
-                      products[i].categorie.toUpperCase(),
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        fontSize: 26,
-                        fontWeight: FontWeight.w700,
+                          ]),
+                      const SizedBox(height: 10),
+                      Text(
+                        products[i].categorie.toUpperCase(),
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          fontSize: 26,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 10),
-                    Text(
-                      "${products[i].price}€",
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        fontSize: 26,
-                        fontWeight: FontWeight.w700,
+                      const SizedBox(height: 10),
+                      Text(
+                        "${products[i].price}€",
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          fontSize: 26,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
-                    ),
-                  ],
-                )
-            ],
-          )
-        ],
-      ),
-    );
+                    ],
+                  )
+              ],
+            )
+          ],
+        ),
+      );
+    });
   }
 }

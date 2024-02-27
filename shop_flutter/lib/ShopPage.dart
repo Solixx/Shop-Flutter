@@ -54,8 +54,9 @@ class GeneratorPage extends StatelessWidget {
             const SizedBox(
               height: 50,
             ),
-            Container(
-              height: 10000,
+            Padding(
+              /* height: 10000, */
+              padding: const EdgeInsets.all(50.0),
               child: Expanded(
                 child: Wrap(
                   direction: Axis.horizontal, 
